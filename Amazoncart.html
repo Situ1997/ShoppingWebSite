@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+        <link rel="stylesheet" href="../Font/css/all.css">
+        <script src="../node_modules/jquery/dist/jquery.js"></script>
+        <script>
+            var categories=["Select a Category","Electronics","Fashion"];
+            var electronics=["Select Electronic Product","Mobile","HeadPhone"];
+            var fashion=["Select Fashion Product","Shirt","Jeans"];
+            // first bodyload() is loaded
+            function bodyLoad(){
+                for(let item of categories){
+                    let option=document.createElement("option");
+                    option.text=item;
+                    option.value=item;
+                    document.getElementById("lstCategories").appendChild(option);
+                }
+            }
+
+            function CategoryChanged(){
+            var categoryName=document.getElementById("lstCategories").value;
+            var lstProducts=document.getElementById("lstProducts");
+            function LoadProduct(collection){
+                lstProducts.innerHTML="";
+                for(var item of collection){
+                        var option=document.createElement("option");
+                        option.text=item;
+                        option.value=item;
+                        lstProducts.appendChild(option);
+                    }
+            }
+            switch(categoryName){
+                case "Electronics":                    
+                    LoadProduct(electronics);
+                    break;
+                case "Fashion":
+                    LoadProduct(fashion);
+                    break;
+                default:
+                    lstProducts.innerHTML="";
+                    break;
+            }
+        }
+        //create a variabel to load the product details 
+        var data=[
+            { Name:"Mobile",Price:15499.6,Photo:"../images/mobile.jpg"},
+            { Name:"HeadPhone",Price:2250.32,Photo:"../images/headphone.jpg"},
+            { Name:"Shirt",Price:999.32,Photo:"../images/shirt.jpg"},
+            { Name:"Jeans",Price:1250.32,Photo:"../images/pant.jpg"}        
+        ];
+        var searchResult=[]; //[0].Name, [0].Price, [0].Photo
+        function ProductChanged(){
+            var productName = document.getElementById("lstProducts").value;
+            searchResult = data.filter(function(product){return product.Name==productName});
+            document.getElementById("prodName").innerHTML = searchResult[0].Name;
+            document.getElementById("prodImage").src=searchResult[0].Photo;
+            document.getElementById("prodPrice").innerHTML="&#8377;" + searchResult[0].Price;
+        }
+        //items are adding to cart
+        var cartItems=[]
+        var cartItem=[
+            Name="",
+            Price=0,
+            Photo=""
+        ];
+        function AddToCartClick(){
+            cartItem={
+                Name:searchResult[0].Name,
+                Price:searchResult[0].Price,
+                Photo: searchResult[0].Photo
+            };
+            cartItems.push(cartItem);
+            alert("Item added to cart");
+            document.getElementById("itemCount").innerHTML=`[${cartItems.length}]`;
+        }
+
+        </script>
+    </head>
+    <body onload="bodyLoad()" class="container-fluid">
+        <div class="row" style="margin-top: 30px;">
+            <div class="col-3">
+                <h2>Amazon Shopping</h2>
+                <div class="form-group">
+                    <label>Select a Category</label>
+                    <div>
+                        <select onchange="CategoryChanged()" class="form-control" id="lstCategories"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label >Select a Product</label>
+                    <div>
+                        <select onchange="ProductChanged()" class="form-control" id="lstProducts"></select>
+                    </div>
+                </div>
+                <!-- show product  details -->
+                <div>
+                    <label for="">Product Details</label>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 id="prodName"></h2>
+                        </div>
+                        <div class="card-body">
+                            <img id="prodImage" width="200" height="200">
+                        </div>
+                        <div class="card-footer">
+                            <h2 id="prodPrice"></h2>
+                            <button onclick="AddToCartClick()" class="btn btn-danger btn-block"><span class="fa fa-shopping-cart"></span> Add To Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         <!--Amazon shopping part-->
+            <div class="col-6">
+                
+            </div>
+            <div class="col-3">
+                <button class="btn btn-success" >
+                    <span class="fa fa-shopping-cart"></span>
+                    Your Cart Item
+                    <span id="itemCount"></span>
+                </button>    
+            </div>
+        </div>
+    </body>
+</html>
